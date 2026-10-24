@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - microservices-extra-kube-manifests/HTTProute.yaml
   - microservices-extra-kube-manifests/target-grp.yaml
+  - scaling/hpa-frontend.yaml
 
 helmCharts:
   - name: onlineboutique
