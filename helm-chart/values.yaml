@@ -1,56 +1,38 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# Default values for onlineboutique.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
 
 images:
   adservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/adservice
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.10.4
+    repository: avinavv/adservice
+    tag: v1
   cartservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/cartservice
-    tag: v0.10.4
+    repository: avinavv/cartservice
+    tag: v1
   checkoutservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/checkoutservice
-    tag: v0.10.4
+    repository: avinavv/checkoutservice
+    tag: v1
   currencyservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/currencyservice
-    tag: v0.10.4
+    repository: avinavv/currencyservice
+    tag: v1
   emailservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/emailservice
-    tag: v0.10.4
+    repository: avinavv/emailservice
+    tag: v1
   frontend:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/frontend
-    tag: v0.10.4
+    repository: avinavv/frontend
+    tag: v1
   loadgenerator:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/loadgenerator
-    tag: v0.10.4
+    repository: avinavv/loadgenerator
+    tag: v1
   paymentservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/paymentservice
-    tag: v0.10.4
+    repository: avinavv/paymentservice
+    tag: v1
   productcatalogservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/productcatalogservice
-    tag: v0.10.4
+    repository: avinavv/productcatalogservice
+    tag: v1
   recommendationservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/recommendationservice
-    tag: v0.10.4
+    repository: avinavv/recommendationservice
+    tag: v1
   shippingservice:
-    repository: ghcr.io/laxmikantagiri/microservices-demo/shippingservice
-    tag: v0.10.4
+    repository: avinavv/shippingservice
+    tag: v1
 
 serviceAccounts:
   # Specifies whether service accounts should be created.
