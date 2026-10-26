@@ -1,7 +1,7 @@
 @Library('Shared') _
 
 pipeline {
-    agent { label 'Node' }
+    agent any
 
     options {
         timestamps()
@@ -11,11 +11,17 @@ pipeline {
     }
 
     environment {
+        REPOSITORY_URL = 'https://github.com/avinavvv/Production-Grade_GitOps-Driven_Microservices-Demo.git'
+        GIT_BRANCH = 'main'
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
-        SONAR_SERVER = 'Sonar'
-        SONAR_SCANNER = 'Sonar'
+        SONAR_INSTALLATION = 'Sonar'
         SONAR_PROJECT_KEY = 'online-boutique'
+        SONAR_PROJECT_NAME = 'Online Boutique'
+        SONAR_SOURCES = 'src'
         OWASP_TOOL = 'OWASP'
+        IMAGE_TAG_LENGTH = '12'
+        TRIVY_SEVERITIES = 'HIGH,CRITICAL'
+        TRIVY_EXIT_CODE = '0'
     }
 
     stages {
@@ -28,50 +34,40 @@ pipeline {
         stage('Git: Code Checkout') {
             steps {
                 codeCheckout(
-                    'https://github.com/avinavvv/Production-Grade_GitOps-Driven_Microservices-Demo.git',
-                    'main'
+                    env.REPOSITORY_URL,
+                    env.GIT_BRANCH
                 )
             }
         }
 
         stage('Discover Microservices') {
             steps {
-                script {
-                    env.IMAGE_TAG = sh(
-                        script: 'git rev-parse --short=12 HEAD',
-                        returnStdout: true
-                    ).trim()
-
-                    env.SERVICES = discoverServices()
-
-                    if (!env.SERVICES?.trim()) {
-                        error('No services found under src/*/Dockerfile')
-                    }
-
-                    echo "Image tag: ${env.IMAGE_TAG}"
-                    echo "Services to build:\n${env.SERVICES}"
-                }
+                discoverServices(env.IMAGE_TAG_LENGTH)
             }
         }
 
         stage('Trivy: Filesystem Scan') {
             steps {
-                trivyFilesystem()
+                trivyFilesystem(
+                    env.TRIVY_SEVERITIES,
+                    env.TRIVY_EXIT_CODE
+                )
             }
         }
 
         stage('OWASP: Dependency Check') {
             steps {
-                dependencyCheck()
+                dependencyCheck(env.OWASP_TOOL)
             }
         }
 
         stage('SonarQube: Code Analysis') {
             steps {
                 sonarAnalysis(
+                    env.SONAR_INSTALLATION,
                     env.SONAR_PROJECT_KEY,
-                    'Online Boutique',
-                    'src'
+                    env.SONAR_PROJECT_NAME,
+                    env.SONAR_SOURCES
                 )
             }
         }
@@ -84,19 +80,23 @@ pipeline {
 
         stage('Docker: Build All Microservices') {
             steps {
-                dockerBuildAll()
+                dockerBuildAll(env.DOCKERHUB_CREDENTIALS)
             }
         }
 
         stage('Trivy: Image Scan') {
             steps {
-                trivyImageScan()
+                trivyImageScan(
+                    env.DOCKERHUB_CREDENTIALS,
+                    env.TRIVY_SEVERITIES,
+                    env.TRIVY_EXIT_CODE
+                )
             }
         }
 
         stage('Docker: Push to Docker Hub') {
             steps {
-                dockerPushAll()
+                dockerPushAll(env.DOCKERHUB_CREDENTIALS)
             }
         }
     }
@@ -108,11 +108,11 @@ pipeline {
         }
 
         success {
-            echo 'All microservice images passed the configured checks and were pushed.'
+            echo 'All stages passed and images were pushed.'
         }
 
         failure {
-            echo 'CI failed. Fix the failed stage before retrying.'
+            echo 'Pipeline failed. Check the failed stage logs.'
         }
     }
 }
