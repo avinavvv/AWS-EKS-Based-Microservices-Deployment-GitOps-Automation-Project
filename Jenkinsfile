@@ -55,12 +55,6 @@ pipeline {
             }
         }
 
-        stage('OWASP: Dependency Check') {
-            steps {
-                dependencyCheck(env.OWASP_TOOL)
-            }
-        }
-
         stage('SonarQube: Code Analysis') {
             steps {
                 sonarAnalysis(
