@@ -11,7 +11,7 @@ pipeline {
     }
 
     environment {
-        REPOSITORY_URL = 'https://github.com/avinavvv/Production-Grade_GitOps-Driven_Microservices-Demo.git'
+        REPOSITORY_URL = 'https://github.com/avinavvv/AWS-EKS-Based-Microservices-Deployment-GitOps-Automation-Project.git'
         GIT_BRANCH = 'main'
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
         SONAR_INSTALLATION = 'Sonar'
