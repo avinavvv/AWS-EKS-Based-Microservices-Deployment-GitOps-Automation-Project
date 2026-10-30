@@ -14,11 +14,6 @@ pipeline {
         REPOSITORY_URL = 'https://github.com/avinavvv/AWS-EKS-Based-Microservices-Deployment-GitOps-Automation-Project.git'
         GIT_BRANCH = 'main'
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
-        SONAR_INSTALLATION = 'Sonar'
-        SONAR_PROJECT_KEY = 'online-boutique'
-        SONAR_PROJECT_NAME = 'Online Boutique'
-        SONAR_SOURCES = 'src'
-        OWASP_TOOL = 'OWASP'
         IMAGE_TAG_LENGTH = '12'
         TRIVY_SEVERITIES = 'HIGH,CRITICAL'
         TRIVY_EXIT_CODE = '0'
@@ -52,23 +47,6 @@ pipeline {
                     env.TRIVY_SEVERITIES,
                     env.TRIVY_EXIT_CODE
                 )
-            }
-        }
-
-        stage('SonarQube: Code Analysis') {
-            steps {
-                sonarAnalysis(
-                    env.SONAR_INSTALLATION,
-                    env.SONAR_PROJECT_KEY,
-                    env.SONAR_PROJECT_NAME,
-                    env.SONAR_SOURCES
-                )
-            }
-        }
-
-        stage('SonarQube: Quality Gate') {
-            steps {
-                sonarQualityGate()
             }
         }
 

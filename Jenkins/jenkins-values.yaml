@@ -1033,11 +1033,11 @@ agent:
   jnlpregistry:
   image:
     # -- Registry to pull the agent jnlp image from
-    registry: ""
+    registry: "docker.io"
     # -- Repository to pull the agent jnlp image from
-    repository: "jenkins/inbound-agent"
+    repository: "avinavv/jenkins-agent"
     # -- Tag of the image to pull
-    tag: "3395.v6e5377b_0fb_3c-2-jdk25"
+    tag: "latest"
   # -- Configure working directory for default agent
   workingDir: "/home/jenkins/agent"
   nodeUsageMode: "NORMAL"
@@ -1159,7 +1159,9 @@ agent:
 
   # Pod-wide environment, these vars are visible to any container in the agent pod
   # -- Environment variables for the agent Pod
-  envVars: []
+  envVars:
+    - name: DOCKER_HOST
+      value: "tcp://localhost:2375"
   # - name: PATH
   #   value: /usr/local/bin
   # -- Mount a secret as environment variable
@@ -1232,21 +1234,24 @@ agent:
 
   # Containers specified here are added to all agents. Set key empty to remove container from additional agents.
   # -- Add additional containers to the agents
-  additionalContainers: []
-  #  - sideContainerName: dind
-  #    image:
-  #      repository: docker
-  #      tag: dind
-  #    command: dockerd-entrypoint.sh
-  #    args: ""
-  #    privileged: true
-  #    resources:
-  #      requests:
-  #        cpu: 500m
-  #        memory: 1Gi
-  #      limits:
-  #        cpu: 1
-  #        memory: 2Gi
+  additionalContainers:
+    - sideContainerName: dind
+      image:
+        repository: avinavv/jenkins-dind
+        tag: "27"
+      command: dockerd-entrypoint.sh
+      env:
+        - name: DOCKER_TLS_CERTDIR
+          value: ""
+      args: ""
+      privileged: true
+      resources:
+        requests:
+          cpu: 250m
+          memory: 512Mi
+        limits:
+          cpu: "1"
+          memory: 1Gi
 
   # Useful when configuring agents only with the podTemplates value, since the default podTemplate populated by values mentioned above will be excluded in the rendered template.
   # -- Disable the default Jenkins Agent configuration
