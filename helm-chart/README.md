@@ -32,6 +32,21 @@ helm upgrade onlineboutique oci://us-docker.pkg.dev/online-boutique-ci/charts/on
 
 For the full list of configurations, see [values.yaml](./values.yaml).
 
+## Deploying this repository's images
+
+The chart defaults point to this repository's GHCR packages. Ensure the packages
+have been published and are public, or create a `kubernetes.io/dockerconfigjson`
+Secret in the release namespace and configure it with `imagePullSecrets`:
+
+```yaml
+imagePullSecrets:
+  - name: ghcr-pull
+```
+
+For private packages, the Argo CD Image Updater also needs read access to GHCR
+to discover image tags. Configure its registry credentials in the Argo CD
+installation without committing credentials to this repository.
+
 You could also find advanced scenarios with these blogs below:
 - [Online Boutique sample’s Helm chart, to simplify the setup of advanced and secured scenarios with Service Mesh and GitOps](https://medium.com/google-cloud/246119e46d53)
 - [gRPC health probes with Kubernetes 1.24+](https://medium.com/google-cloud/b5bd26253a4c)

@@ -34,6 +34,10 @@ spec:
       {{- else }}
       serviceAccountName: default
       {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if .Values.securityContext.enable }}
       securityContext:
         fsGroup: 1000
@@ -54,7 +58,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: avinavv/shippingservice:v1
+        image: "{{ .Values.images.shippingservice.repository }}:{{ .Values.images.shippingservice.tag }}"
         ports:
         - containerPort: 50051
         env:

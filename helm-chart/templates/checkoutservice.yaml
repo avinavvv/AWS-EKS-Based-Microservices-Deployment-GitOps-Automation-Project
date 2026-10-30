@@ -34,6 +34,10 @@ spec:
       {{- else }}
       serviceAccountName: default
       {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if .Values.securityContext.enable }}
       securityContext:
         fsGroup: 1000
@@ -54,7 +58,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: avinavv/checkoutservice:v1
+        image: "{{ .Values.images.checkoutservice.repository }}:{{ .Values.images.checkoutservice.tag }}"
         ports:
         - containerPort: 5050
         readinessProbe:

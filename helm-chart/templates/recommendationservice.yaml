@@ -34,6 +34,10 @@ spec:
       {{- else }}
       serviceAccountName: default
       {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       terminationGracePeriodSeconds: 5
       {{- if .Values.securityContext.enable }}
       securityContext:
@@ -55,7 +59,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: avinavv/recommendationservice:v1
+        image: "{{ .Values.images.recommendationservice.repository }}:{{ .Values.images.recommendationservice.tag }}"
         ports:
         - containerPort: 8080
         readinessProbe:

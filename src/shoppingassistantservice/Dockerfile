@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM python:3.14.2-slim@sha256:9b81fe9acff79e61affb44aaf3b6ff234392e8ca477cb86c9f7fd11732ce9b6a AS base
+FROM --platform=$TARGETPLATFORM python:3.14.2-slim@sha256:9b81fe9acff79e61affb44aaf3b6ff234392e8ca477cb86c9f7fd11732ce9b6a AS base
 
 FROM base AS builder
 
@@ -8,7 +8,7 @@ RUN apt-get -qq update \
 
 # get packages
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 FROM base
 # Enable unbuffered logging
@@ -24,7 +24,8 @@ COPY --from=builder /usr/local/lib/python3.14/ /usr/local/lib/python3.14/
 COPY . .
 
 # set listen port
-ENV PORT "8080"
+ENV PORT=8080
 EXPOSE 8080
 
+USER 1000:1000
 ENTRYPOINT ["python", "shoppingassistantservice.py"]

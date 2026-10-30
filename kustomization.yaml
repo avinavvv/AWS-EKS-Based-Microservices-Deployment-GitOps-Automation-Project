@@ -4,12 +4,12 @@ kind: Kustomization
 resources:
   - microservices-extra-kube-manifests/HTTProute.yaml
   - microservices-extra-kube-manifests/target-grp.yaml
-  - scaling/hpa-frontend.yaml
+  - scaling/frontend-hpa.yaml
 
 helmCharts:
   - name: onlineboutique
-    repo: oci://ghcr.io/laxmikantagiri
-    version: 0.10.4
+    includeCRDs: true
     releaseName: boutique-app
     namespace: boutique-app
     valuesFile: helm-chart/values.yaml
+    version: 0.10.4

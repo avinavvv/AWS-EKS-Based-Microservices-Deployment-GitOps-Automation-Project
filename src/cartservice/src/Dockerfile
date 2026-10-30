@@ -1,4 +1,6 @@
-FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/sdk:10.0.100-noble@sha256:c7445f141c04f1a6b454181bd098dcfa606c61ba0bd213d0a702489e5bd4cd71 AS builder
+ARG DOTNET_BUILDER_PLATFORM=linux/amd64
+# Grpc.Tools' ARM64 protoc crashes in the current builder; keep code generation on a supported host architecture.
+FROM --platform=$DOTNET_BUILDER_PLATFORM mcr.microsoft.com/dotnet/sdk:10.0.100-noble@sha256:c7445f141c04f1a6b454181bd098dcfa606c61ba0bd213d0a702489e5bd4cd71 AS builder
 ARG TARGETARCH
 WORKDIR /app
 COPY cartservice.csproj .

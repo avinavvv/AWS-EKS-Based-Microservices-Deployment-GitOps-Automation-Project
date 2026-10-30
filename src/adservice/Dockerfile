@@ -21,7 +21,8 @@ FROM eclipse-temurin:25.0.1_8-jre-alpine@sha256:b51543f89580c1ba70e441cfbc0cfc16
 #     rm -rf profiler_java_agent.tar.gz
 
 WORKDIR /app
-COPY --from=builder /app .
+COPY --from=builder /app/build/install/hipstershop ./build/install/hipstershop
 
 EXPOSE 9555
+USER 1000:1000
 ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]

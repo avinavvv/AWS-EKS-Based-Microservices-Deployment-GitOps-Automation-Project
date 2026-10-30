@@ -1,8 +1,31 @@
 #!/bin/bash
-set -e
+set -Eeuo pipefail
 
-DOCKERHUB_USER="avinavv"
-PLATFORM="linux/amd64"
+DOCKERHUB_USER="${DOCKERHUB_USER:-avinavv}"
+TAG="${TAG:-v1}"
+PUSH="${PUSH:-false}"
+
+if [[ "$PUSH" == "true" ]]; then
+  PLATFORMS="${PLATFORMS:-linux/amd64,linux/arm64}"
+else
+  if [[ -n "${PLATFORMS:-}" && "$PLATFORMS" == *,* ]]; then
+    echo "Multi-platform builds require PUSH=true. Authenticate to Docker Hub first." >&2
+    exit 1
+  fi
+
+  if [[ -z "${PLATFORMS:-}" ]]; then
+    case "$(docker info --format '{{.Architecture}}')" in
+      aarch64|arm64) PLATFORMS=linux/arm64 ;;
+      x86_64|amd64) PLATFORMS=linux/amd64 ;;
+      *)
+        echo "Unsupported local Docker architecture; set PLATFORMS explicitly." >&2
+        exit 1
+        ;;
+    esac
+  fi
+fi
+
+docker buildx inspect --bootstrap >/dev/null
 
 services=(
   adservice
@@ -23,23 +46,30 @@ for service in "${services[@]}"; do
   echo "========== Building $service =========="
 
   if [ "$service" = "cartservice" ]; then
-    docker buildx build \
-      --platform "$PLATFORM" \
-      --load \
-      -t "$DOCKERHUB_USER/$service:v1" \
-      -f src/cartservice/src/Dockerfile \
-      src/cartservice/src
+    dockerfile=src/cartservice/src/Dockerfile
+    context=src/cartservice/src
   else
-    docker buildx build \
-      --platform "$PLATFORM" \
-      --load \
-      -t "$DOCKERHUB_USER/$service:v1" \
-      -f "src/$service/Dockerfile" \
-      "src/$service"
+    dockerfile="src/$service/Dockerfile"
+    context="src/$service"
   fi
+
+  output=--load
+  if [[ "$PUSH" == "true" ]]; then
+    output=--push
+  fi
+
+  docker buildx build \
+    --platform "$PLATFORMS" \
+    "$output" \
+    -t "$DOCKERHUB_USER/$service:$TAG" \
+    -f "$dockerfile" \
+    "$context"
 
   echo "SUCCESS: $service"
 done
 
-echo "All images built successfully."
-
+if [[ "$PUSH" == "true" ]]; then
+  echo "All multi-platform images were pushed successfully."
+else
+  echo "All images were built successfully for $PLATFORMS."
+fi

@@ -36,6 +36,10 @@ spec:
       {{- else }}
       serviceAccountName: default
       {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if .Values.securityContext.enable }}
       securityContext:
         fsGroup: 1000
@@ -56,7 +60,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: avinavv/frontend:v1
+          image: "{{ .Values.images.frontend.repository }}:{{ .Values.images.frontend.tag }}"
           ports:
           - containerPort: 8080
           readinessProbe:
