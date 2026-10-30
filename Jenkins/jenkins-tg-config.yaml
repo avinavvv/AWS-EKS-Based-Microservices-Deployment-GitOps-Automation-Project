@@ -1,0 +1,10 @@
+apiVersion: gateway.k8s.aws/v1
+kind: TargetGroupConfiguration
+metadata:
+  name: jenkins-tg-config
+  namespace: jenkins
+spec:
+  targetReference:
+    name: jenkins
+  defaultConfiguration:
+    targetType: ip
