@@ -75,7 +75,6 @@ pipeline {
 
     post {
         always {
-            sh 'docker logout >/dev/null 2>&1 || true'
             echo 'CI pipeline completed. Review stage logs and reports.'
         }
 
