@@ -1,3 +1,4 @@
+
 @Library('Shared') _
 
 pipeline {
@@ -21,7 +22,7 @@ pipeline {
     stages {
         stage('Workspace Cleanup') {
             steps {
-                cleanWs()
+                deleteDir()
             }
         }
 
@@ -87,3 +88,4 @@ pipeline {
         }
     }
 }
+
