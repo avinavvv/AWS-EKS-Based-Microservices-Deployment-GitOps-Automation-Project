@@ -1,0 +1,5 @@
+FROM docker:27-dind
+
+ENV DOCKER_TLS_CERTDIR=""
+
+EXPOSE 2375
