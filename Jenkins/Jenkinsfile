@@ -5,6 +5,7 @@ pipeline {
     agent any
 
     options {
+        timestamps()
         disableConcurrentBuilds()
         skipDefaultCheckout(true)
         timeout(time: 90, unit: 'MINUTES')
@@ -20,6 +21,7 @@ pipeline {
     }
 
     stages {
+
         stage('Workspace Cleanup') {
             steps {
                 deleteDir()
@@ -50,25 +52,13 @@ pipeline {
             }
         }
 
-        stage('Docker: Build All Microservices') {
+        stage('Docker: Build, Scan and Push') {
             steps {
-                dockerBuildAll(env.DOCKERHUB_CREDENTIALS)
-            }
-        }
-
-        stage('Trivy: Image Scan') {
-            steps {
-                trivyImageScan(
+                dockerBuildScanPushAll(
                     env.DOCKERHUB_CREDENTIALS,
                     env.TRIVY_SEVERITIES,
                     env.TRIVY_EXIT_CODE
                 )
-            }
-        }
-
-        stage('Docker: Push to Docker Hub') {
-            steps {
-                dockerPushAll(env.DOCKERHUB_CREDENTIALS)
             }
         }
     }
@@ -79,12 +69,15 @@ pipeline {
         }
 
         success {
-            echo 'All stages passed and images were pushed.'
+            echo 'All microservices processed and images pushed successfully.'
         }
 
         failure {
             echo 'Pipeline failed. Check the failed stage logs.'
         }
+
+        aborted {
+            echo 'Pipeline was aborted.'
+        }
     }
 }
-
