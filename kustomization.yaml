@@ -8,8 +8,7 @@ resources:
 
 helmCharts:
   - name: onlineboutique
-    includeCRDs: true
     releaseName: boutique-app
     namespace: boutique-app
+    includeCRDs: true
     valuesFile: helm-chart/values.yaml
-    version: 0.10.4

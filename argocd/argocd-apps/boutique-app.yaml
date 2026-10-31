@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/avinavvv/Production-Grade_GitOps-Driven_Microservices-Demo.git
+    repoURL: https://github.com/avinavvv/AWS-EKS-Based-Microservices-Deployment-GitOps-Automation-Project.git
     targetRevision: HEAD
     path: .
 
