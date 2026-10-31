@@ -41,10 +41,10 @@ images:
     newTag: sha-ebe63dbdf513
   - name: avinavv/productcatalogservice
     newName: avinavv/productcatalogservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/recommendationservice
     newName: avinavv/recommendationservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/shippingservice
     newName: avinavv/shippingservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
