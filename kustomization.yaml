@@ -29,22 +29,22 @@ images:
     newTag: sha-aed6f45806a3
   - name: avinavv/emailservice
     newName: avinavv/emailservice
-    newTag: sha-f3224675e916
+    newTag: sha-aed6f45806a3
   - name: avinavv/frontend
     newName: avinavv/frontend
-    newTag: sha-f3224675e916
+    newTag: sha-aed6f45806a3
   - name: avinavv/loadgenerator
     newName: avinavv/loadgenerator
-    newTag: sha-f3224675e916
+    newTag: sha-aed6f45806a3
   - name: avinavv/paymentservice
     newName: avinavv/paymentservice
-    newTag: sha-f3224675e916
+    newTag: sha-aed6f45806a3
   - name: avinavv/productcatalogservice
     newName: avinavv/productcatalogservice
-    newTag: sha-f3224675e916
+    newTag: sha-aed6f45806a3
   - name: avinavv/recommendationservice
     newName: avinavv/recommendationservice
-    newTag: sha-f3224675e916
+    newTag: sha-aed6f45806a3
   - name: avinavv/shippingservice
     newName: avinavv/shippingservice
-    newTag: sha-f3224675e916
+    newTag: sha-aed6f45806a3
