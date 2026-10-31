@@ -1,98 +1,102 @@
+
 apiVersion: argocd-image-updater.argoproj.io/v1alpha1
 kind: ImageUpdater
 metadata:
   name: boutique-image-updater
   namespace: argocd
+
 spec:
   namespace: argocd
 
   writeBackConfig:
-    method: git
+    method: git:secret:argocd/argocd-image-updater-git-creds
     gitConfig:
+      repository: https://github.com/avinavvv/AWS-EKS-Based-Microservices-Deployment-GitOps-Automation-Project.git
       branch: main
-      writeBackTarget: "helmvalues:/helm-chart/values.yaml"
+      writeBackTarget: helmvalues:helm-chart/values.yaml
 
   applicationRefs:
-    - namePattern: "boutique-app"
+    - namePattern: boutique-app
 
       commonUpdateSettings:
         updateStrategy: newest-build
-        allowTags: "regexp:^sha-[a-f0-9]{7,40}$"
+        allowTags: "regexp:^sha-[a-f0-9]{12}$"
 
       images:
         - alias: adservice
-          imageName: docker.io/avinavv/adservice
+          imageName: docker.io/avinavv/adservice:v1
           manifestTargets:
             helm:
               name: images.adservice.repository
               tag: images.adservice.tag
 
         - alias: cartservice
-          imageName: docker.io/avinavv/cartservice
+          imageName: docker.io/avinavv/cartservice:v1
           manifestTargets:
             helm:
               name: images.cartservice.repository
               tag: images.cartservice.tag
 
         - alias: checkoutservice
-          imageName: docker.io/avinavv/checkoutservice
+          imageName: docker.io/avinavv/checkoutservice:v1
           manifestTargets:
             helm:
               name: images.checkoutservice.repository
               tag: images.checkoutservice.tag
 
         - alias: currencyservice
-          imageName: docker.io/avinavv/currencyservice
+          imageName: docker.io/avinavv/currencyservice:v1
           manifestTargets:
             helm:
               name: images.currencyservice.repository
               tag: images.currencyservice.tag
 
         - alias: emailservice
-          imageName: docker.io/avinavv/emailservice
+          imageName: docker.io/avinavv/emailservice:v1
           manifestTargets:
             helm:
               name: images.emailservice.repository
               tag: images.emailservice.tag
 
         - alias: frontend
-          imageName: docker.io/avinavv/frontend
+          imageName: docker.io/avinavv/frontend:v1
           manifestTargets:
             helm:
               name: images.frontend.repository
               tag: images.frontend.tag
 
         - alias: loadgenerator
-          imageName: docker.io/avinavv/loadgenerator
+          imageName: docker.io/avinavv/loadgenerator:v1
           manifestTargets:
             helm:
               name: images.loadgenerator.repository
               tag: images.loadgenerator.tag
 
         - alias: paymentservice
-          imageName: docker.io/avinavv/paymentservice
+          imageName: docker.io/avinavv/paymentservice:v1
           manifestTargets:
             helm:
               name: images.paymentservice.repository
               tag: images.paymentservice.tag
 
         - alias: productcatalogservice
-          imageName: docker.io/avinavv/productcatalogservice
+          imageName: docker.io/avinavv/productcatalogservice:v1
           manifestTargets:
             helm:
               name: images.productcatalogservice.repository
               tag: images.productcatalogservice.tag
 
         - alias: recommendationservice
-          imageName: docker.io/avinavv/recommendationservice
+          imageName: docker.io/avinavv/recommendationservice:v1
           manifestTargets:
             helm:
               name: images.recommendationservice.repository
               tag: images.recommendationservice.tag
 
         - alias: shippingservice
-          imageName: docker.io/avinavv/shippingservice
+          imageName: docker.io/avinavv/shippingservice:v1
           manifestTargets:
             helm:
               name: images.shippingservice.repository
               tag: images.shippingservice.tag
+
