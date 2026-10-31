@@ -20,25 +20,25 @@ images:
     newTag: sha-ebe63dbdf513
   - name: avinavv/cartservice
     newName: avinavv/cartservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/checkoutservice
     newName: avinavv/checkoutservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/currencyservice
     newName: avinavv/currencyservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/emailservice
     newName: avinavv/emailservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/frontend
     newName: avinavv/frontend
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/loadgenerator
     newName: avinavv/loadgenerator
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/paymentservice
     newName: avinavv/paymentservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/productcatalogservice
     newName: avinavv/productcatalogservice
     newTag: sha-cc98b49ee5a9
