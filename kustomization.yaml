@@ -17,7 +17,7 @@ helmCharts:
 images:
   - name: avinavv/adservice
     newName: avinavv/adservice
-    newTag: sha-cc98b49ee5a9
+    newTag: sha-ebe63dbdf513
   - name: avinavv/cartservice
     newName: avinavv/cartservice
     newTag: sha-cc98b49ee5a9
