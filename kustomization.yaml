@@ -35,16 +35,16 @@ images:
     newTag: sha-f3224675e916
   - name: avinavv/loadgenerator
     newName: avinavv/loadgenerator
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/paymentservice
     newName: avinavv/paymentservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/productcatalogservice
     newName: avinavv/productcatalogservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/recommendationservice
     newName: avinavv/recommendationservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/shippingservice
     newName: avinavv/shippingservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
