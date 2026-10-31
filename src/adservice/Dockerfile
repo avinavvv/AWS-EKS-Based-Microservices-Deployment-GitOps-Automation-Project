@@ -26,3 +26,4 @@ COPY --from=builder /app/build/install/hipstershop ./build/install/hipstershop
 EXPOSE 9555
 USER 1000:1000
 ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
+# Webhook selective-build test
