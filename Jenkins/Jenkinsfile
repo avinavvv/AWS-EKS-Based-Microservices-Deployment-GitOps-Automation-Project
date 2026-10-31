@@ -51,32 +51,63 @@ pipeline {
             }
         }
 
-        stage('Docker: Build, Scan and Push') {
+        stage('Docker: Build All Microservices') {
             steps {
-                dockerBuildScanPushAll(
+                dockerBuildAll(
+                    env.DOCKERHUB_CREDENTIALS
+                )
+            }
+        }
+
+        stage('Trivy: Image Scan') {
+            steps {
+                trivyImageScan(
                     env.DOCKERHUB_CREDENTIALS,
                     env.TRIVY_SEVERITIES,
                     env.TRIVY_EXIT_CODE
                 )
             }
         }
+
+        stage('Docker: Push to Docker Hub') {
+            steps {
+                dockerPushAll(
+                    env.DOCKERHUB_CREDENTIALS
+                )
+            }
+        }
+
+        stage('Docker: Cleanup') {
+            steps {
+                dockerCleanupAll(env.DOCKERHUB_CREDENTIALS)
+            }
+        }
     }
 
     post {
+
         always {
-            echo 'CI pipeline completed. Review stage logs and reports.'
+            echo 'CI pipeline execution completed.'
         }
 
         success {
-            echo 'All microservices processed and images pushed successfully.'
+            echo 'All microservices built, scanned and pushed successfully.'
         }
 
         failure {
-            echo 'Pipeline failed. Check the failed stage logs.'
+            echo 'Pipeline failed. Running Docker cleanup.'
+
+            script {
+                dockerCleanupAll(env.DOCKERHUB_CREDENTIALS)
+            }
         }
 
         aborted {
-            echo 'Pipeline was aborted.'
+            echo 'Pipeline aborted. Running Docker cleanup.'
+
+            script {
+                dockerCleanupAll(env.DOCKERHUB_CREDENTIALS)
+            }
         }
     }
 }
