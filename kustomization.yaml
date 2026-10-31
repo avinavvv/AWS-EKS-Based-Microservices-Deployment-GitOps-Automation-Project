@@ -15,3 +15,5 @@ helmCharts:
     namespace: boutique-app
     includeCRDs: true
     valuesFile: helm-chart/values.yaml
+    additionalValuesFiles:
+      - helm-chart/image-updater-values.yaml
