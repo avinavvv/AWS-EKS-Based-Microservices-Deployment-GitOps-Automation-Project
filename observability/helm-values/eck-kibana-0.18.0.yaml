@@ -77,7 +77,9 @@ elasticsearchRef:
 # The Kibana configuration (kibana.yml)
 # ref: https://www.elastic.co/guide/en/kibana/current/settings.html
 #
-config: null
+config:
+  server.basePath: "/kibana"
+  server.rewriteBasePath: true
 
 # The HTTP layer configuration for Kibana.
 #

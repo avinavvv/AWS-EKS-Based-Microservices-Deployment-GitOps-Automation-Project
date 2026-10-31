@@ -544,9 +544,9 @@ alertmanager:
     receivers:
     - name: 'slack-notification'
       slack_configs:
-        - api_url_file: /etc/alertmanager/secrets/alertmanager-slack-webhook/slack-webhook-url
-          channel: '#alerts'
-          send_resolved: true
+      - api_url_file: /etc/alertmanager/secrets/alertmanager-slack-webhook/slack-webhook-url
+        channel: '#alertmanager'
+        send_resolved: true
     templates:
     - '/etc/alertmanager/config/*.tmpl'
 
@@ -1230,6 +1230,10 @@ alertmanager:
 grafana:
   enabled: true
   namespaceOverride: ""
+  grafana.ini:
+    server:
+      root_url: http://k8s-default-appalbga-744c1f48c6-1513345995.ap-southeast-1.elb.amazonaws.com/grafana/
+      serve_from_sub_path: true
 
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
   ##
@@ -4119,7 +4123,7 @@ prometheus:
 
     ## External URL at which Prometheus will be reachable.
     ##
-    externalUrl: ""
+    externalUrl: "http://k8s-default-appalbga-744c1f48c6-1513345995.ap-southeast-1.elb.amazonaws.com/prometheus/"
 
     ## Define which Nodes the Pods are scheduled on.
     ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
@@ -4314,7 +4318,7 @@ prometheus:
     ## Prefix used to register routes, overriding externalUrl route.
     ## Useful for proxies that rewrite URLs.
     ##
-    routePrefix: /
+    routePrefix: /prometheus
 
     ## Standard object's metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
     ## Metadata Labels and Annotations gets propagated to the prometheus pods.

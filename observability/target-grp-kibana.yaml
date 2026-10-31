@@ -11,4 +11,4 @@ spec:
     protocol: HTTPS
     healthCheckConfig:
       healthCheckProtocol: HTTPS
-      healthCheckPath: /api/status
+      healthCheckPath: /kibana/api/status

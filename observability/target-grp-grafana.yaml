@@ -5,6 +5,6 @@ metadata:
   namespace: monitoring
 spec:
   targetReference:
-    name: kube-prometheus-stack-grafana 
+    name: kube-prometheus-stack-grafana
   defaultConfiguration:
     targetType: ip
