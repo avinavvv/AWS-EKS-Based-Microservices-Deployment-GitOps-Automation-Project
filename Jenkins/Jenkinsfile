@@ -1,3 +1,4 @@
+
 @Library('Shared') _
 
 pipeline {
@@ -42,6 +43,11 @@ pipeline {
         }
 
         stage('Trivy: Filesystem Scan') {
+            when {
+                expression {
+                    env.RUN_CI == 'true'
+                }
+            }
             steps {
                 trivyFilesystem(
                     env.TRIVY_SEVERITIES,
@@ -51,12 +57,22 @@ pipeline {
         }
 
         stage('Docker: Wait for Daemon') {
+            when {
+                expression {
+                    env.RUN_CI == 'true' && env.SERVICES?.trim()
+                }
+            }
             steps {
                 waitForDocker()
             }
         }
 
         stage('Docker: Build Selected Microservices') {
+            when {
+                expression {
+                    env.RUN_CI == 'true' && env.SERVICES?.trim()
+                }
+            }
             steps {
                 dockerBuildAll(
                     env.DOCKERHUB_CREDENTIALS
@@ -65,6 +81,11 @@ pipeline {
         }
 
         stage('Trivy: Image Scan') {
+            when {
+                expression {
+                    env.RUN_CI == 'true' && env.SERVICES?.trim()
+                }
+            }
             steps {
                 trivyImageScan(
                     env.DOCKERHUB_CREDENTIALS,
@@ -75,6 +96,11 @@ pipeline {
         }
 
         stage('Docker: Push to Docker Hub') {
+            when {
+                expression {
+                    env.RUN_CI == 'true' && env.SERVICES?.trim()
+                }
+            }
             steps {
                 dockerPushAll(
                     env.DOCKERHUB_CREDENTIALS
@@ -83,8 +109,15 @@ pipeline {
         }
 
         stage('Docker: Cleanup') {
+            when {
+                expression {
+                    env.RUN_CI == 'true' && env.SERVICES?.trim()
+                }
+            }
             steps {
-                dockerCleanupAll(env.DOCKERHUB_CREDENTIALS)
+                dockerCleanupAll(
+                    env.DOCKERHUB_CREDENTIALS
+                )
             }
         }
     }
@@ -96,23 +129,34 @@ pipeline {
         }
 
         success {
-            echo "CI pipeline completed successfully. Image tag: ${env.IMAGE_TAG}"
+            script {
+                if (env.RUN_CI == 'true') {
+                    echo "CI pipeline completed successfully. Image tag: ${env.IMAGE_TAG}"
+                } else {
+                    echo 'CI pipeline skipped: No changes detected inside src/.'
+                }
+            }
         }
 
         failure {
-            echo 'Pipeline failed. Running Docker cleanup.'
+            echo 'Pipeline failed. Checking whether Docker cleanup is required.'
 
             script {
-                dockerCleanupAll(env.DOCKERHUB_CREDENTIALS)
+                if (env.RUN_CI == 'true' && env.SERVICES?.trim()) {
+                    dockerCleanupAll(env.DOCKERHUB_CREDENTIALS)
+                }
             }
         }
 
         aborted {
-            echo 'Pipeline aborted. Running Docker cleanup.'
+            echo 'Pipeline aborted.'
 
             script {
-                dockerCleanupAll(env.DOCKERHUB_CREDENTIALS)
+                if (env.RUN_CI == 'true' && env.SERVICES?.trim()) {
+                    dockerCleanupAll(env.DOCKERHUB_CREDENTIALS)
+                }
             }
         }
     }
 }
+
