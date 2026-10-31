@@ -20,7 +20,7 @@ images:
     newTag: sha-aed6f45806a3
   - name: avinavv/cartservice
     newName: avinavv/cartservice
-    newTag: sha-aed6f45806a3
+    newTag: sha-8ef825b2bafb
   - name: avinavv/checkoutservice
     newName: avinavv/checkoutservice
     newTag: sha-aed6f45806a3
