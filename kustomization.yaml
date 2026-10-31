@@ -1,14 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 helmGlobals:
   chartHome: .
-
 resources:
   - microservices-extra-kube-manifests/HTTProute.yaml
   - microservices-extra-kube-manifests/target-grp.yaml
   - scaling/frontend-hpa.yaml
-
 helmCharts:
   - name: helm-chart
     releaseName: boutique-app
@@ -17,3 +14,37 @@ helmCharts:
     valuesFile: helm-chart/values.yaml
     additionalValuesFiles:
       - helm-chart/image-updater-values.yaml
+images:
+  - name: avinavv/adservice
+    newName: avinavv/adservice
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/cartservice
+    newName: avinavv/cartservice
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/checkoutservice
+    newName: avinavv/checkoutservice
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/currencyservice
+    newName: avinavv/currencyservice
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/emailservice
+    newName: avinavv/emailservice
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/frontend
+    newName: avinavv/frontend
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/loadgenerator
+    newName: avinavv/loadgenerator
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/paymentservice
+    newName: avinavv/paymentservice
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/productcatalogservice
+    newName: avinavv/productcatalogservice
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/recommendationservice
+    newName: avinavv/recommendationservice
+    newTag: sha-cc98b49ee5a9
+  - name: avinavv/shippingservice
+    newName: avinavv/shippingservice
+    newTag: sha-cc98b49ee5a9
