@@ -17,22 +17,22 @@ helmCharts:
 images:
   - name: avinavv/adservice
     newName: avinavv/adservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/cartservice
     newName: avinavv/cartservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/checkoutservice
     newName: avinavv/checkoutservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/currencyservice
     newName: avinavv/currencyservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/emailservice
     newName: avinavv/emailservice
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/frontend
     newName: avinavv/frontend
-    newTag: sha-ebe63dbdf513
+    newTag: sha-f3224675e916
   - name: avinavv/loadgenerator
     newName: avinavv/loadgenerator
     newTag: sha-ebe63dbdf513
