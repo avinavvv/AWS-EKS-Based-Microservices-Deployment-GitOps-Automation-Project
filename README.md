@@ -1,18 +1,18 @@
 # AWS EKS-Based Microservices Deployment & GitOps Automation
 
-An end-to-end DevOps project demonstrating automated CI/CD, Infrastructure as Code, container orchestration, and GitOps-based deployment of a cloud-native microservices application on Amazon EKS.
+An end-to-end DevOps project showcasing automated CI/CD, Infrastructure as Code, and GitOps-based deployment of a cloud-native microservices application on Amazon EKS.
 
-The project uses Jenkins for continuous integration, Docker for containerization, Terraform for infrastructure provisioning, Kubernetes and Helm for application deployment, and Argo CD for continuous delivery through GitOps.
+The project leverages AWS infrastructure, including VPC, public and private subnets, Internet Gateway, NAT Gateway, and Amazon EKS to establish a secure and scalable Kubernetes environment. Terraform automates infrastructure provisioning, Jenkins handles CI pipelines, Docker manages containerization, and Argo CD enables GitOps-based continuous delivery using Kubernetes and Helm.
 
 ---
 
 ## Project Overview
 
-This project focuses on automating the software delivery lifecycle of a microservices-based e-commerce application.
+This project focuses on automating the complete deployment lifecycle of a microservices-based e-commerce application.
 
-The application consists of multiple independent services communicating with each other using gRPC. The DevOps implementation automates infrastructure provisioning, application builds, security and quality checks, container image publishing, and Kubernetes deployments.
+It combines AWS cloud infrastructure, automated CI pipelines, container orchestration, GitOps-based deployments, and monitoring to establish an automated DevOps workflow.
 
-**Primary objective:** Build an automated deployment workflow where application code changes trigger the CI pipeline, and successful image updates are deployed to Kubernetes through Argo CD.
+**Primary Objective:** Automate application builds, security scanning, container image publishing, and Kubernetes deployments while managing cloud infrastructure through Terraform and application delivery through GitOps.
 
 ## Architecture
 
@@ -21,9 +21,9 @@ flowchart TD
     A[Developer] -->|Push Code| B[GitHub]
     B -->|Webhook| C[Jenkins]
     C --> D[Detect Changed Services]
-    D --> E[Code Quality and Security Checks]
+    D --> E[Security Scanning - Trivy]
     E --> F[Docker Build]
-    F --> G[Container Registry]
+    F --> G[Docker Hub]
     G --> H[Update Image Tag]
     H --> I[GitOps Repository]
     I --> J[Argo CD]
@@ -32,26 +32,28 @@ flowchart TD
 
     M[Terraform] --> N[AWS Infrastructure]
     N --> K
+
     O[Prometheus and Grafana] --> K
     K --> O
+
+    P[Loki and Alloy] --> K
+    K --> P
 ```
 
-### Infrastructure Architecture
+### AWS Infrastructure Architecture
 
-Terraform provisions the AWS infrastructure required to run the Kubernetes environment.
+Terraform provisions and manages the AWS infrastructure required to run the Kubernetes environment.
 
-The infrastructure includes:
+Key infrastructure components:
 
-- Amazon VPC and networking components.
-- Public and private subnets.
-- Internet Gateway and NAT Gateway.
-- Amazon EKS cluster.
-- Managed Kubernetes worker nodes.
-- IAM roles and permissions.
-- Security groups.
-- AWS Load Balancer Controller integration.
-
-Application traffic is routed through the AWS load-balancing infrastructure to Kubernetes workloads.
+- **Amazon VPC:** Provides an isolated networking environment.
+- **Public and Private Subnets:** Organize infrastructure and Kubernetes workloads across network tiers.
+- **Internet Gateway:** Enables internet connectivity for public subnet resources.
+- **NAT Gateway:** Provides outbound internet access to resources in private subnets.
+- **Amazon EKS:** Managed Kubernetes control plane for container orchestration.
+- **Managed Node Groups:** Run application workloads on Kubernetes worker nodes.
+- **IAM Roles and Security Groups:** Manage access permissions and network security.
+- **AWS Load Balancer Controller:** Integrates Kubernetes networking with AWS load balancing.
 
 ---
 
@@ -69,10 +71,8 @@ Application traffic is routed through the AWS load-balancing infrastructure to K
 | Image Automation | Argo CD Image Updater |
 | Package Management | Helm |
 | Container Registry | Docker Hub |
-| Code Quality | SonarQube |
-| Security Scanning | Trivy, OWASP Dependency Check |
+| Security Scanning | Trivy |
 | Networking | AWS Load Balancer Controller, Gateway API |
-| DNS Management | ExternalDNS |
 | Monitoring | Prometheus, Grafana |
 | Logging | Loki, Alloy |
 | Application Communication | gRPC |
@@ -82,42 +82,42 @@ Application traffic is routed through the AWS load-balancing infrastructure to K
 
 ## Key Implementations
 
-### 1. Infrastructure Provisioning with Terraform
+### 1. AWS Infrastructure Provisioning with Terraform
 
 - Automated AWS infrastructure provisioning using Terraform.
 - Created VPC networking with public and private subnets.
-- Provisioned Amazon EKS and its supporting infrastructure.
+- Configured Internet Gateway and NAT Gateway.
+- Provisioned Amazon EKS and managed node groups.
 - Configured IAM permissions and security groups.
 - Integrated AWS Load Balancer Controller for external traffic routing.
 
 ### 2. Jenkins CI Pipeline
 
-Implemented an automated Jenkins pipeline using a separately maintained Jenkins Shared Library.
+Implemented an automated Jenkins CI pipeline using a separately maintained Jenkins Shared Library.
 
 Pipeline responsibilities include:
 
 - GitHub webhook-based pipeline triggering.
 - Source code checkout.
 - Detection of changed microservices.
-- Code quality analysis using SonarQube.
-- Dependency vulnerability checks.
-- Filesystem and container image scanning using Trivy.
-- Docker image building and publishing.
+- Docker image building.
+- Container image vulnerability scanning using Trivy.
+- Publishing Docker images to Docker Hub.
 - Automated image version management.
 
-**Optimized build process:** Implemented changed-service detection so that subsequent pipeline executions build only the microservices whose source code has changed, rather than rebuilding every service unnecessarily.
+**Optimized Build Process:** Implemented changed-service detection so that subsequent pipeline executions build only the microservices whose source code has changed, instead of rebuilding every service unnecessarily.
 
 ### 3. Jenkins Shared Libraries
 
 Designed a reusable Jenkins Shared Library to separate pipeline logic from application-specific Jenkinsfiles.
 
-This approach provides:
+Key benefits:
 
 - Reusable pipeline functions.
 - Centralized CI logic.
 - Easier maintenance.
-- Consistent pipeline execution across microservices.
-- Reduced duplication in Jenkinsfiles.
+- Consistent pipeline execution.
+- Reduced code duplication across Jenkins pipelines.
 
 ### 4. GitOps with Argo CD
 
@@ -126,13 +126,13 @@ Implemented GitOps-based continuous delivery using Argo CD.
 Workflow:
 
 1. Jenkins builds and pushes updated container images.
-2. Image updates are reflected in the GitOps configuration.
+2. Updated image tags are reflected in the GitOps configuration.
 3. Argo CD Image Updater automates image update handling.
 4. Argo CD detects changes in the Git repository.
 5. Argo CD synchronizes the desired application state with Amazon EKS.
 6. Kubernetes deploys the updated application workloads.
 
-This separates the CI build process from the CD deployment process.
+This approach separates CI build responsibilities from CD deployment responsibilities.
 
 ### 5. Kubernetes and Helm
 
@@ -141,18 +141,18 @@ This separates the CI build process from the CD deployment process.
 - Organized Kubernetes configuration and deployment manifests.
 - Configured application networking through Gateway API resources.
 - Implemented workload scaling configurations.
-- Used Kubernetes declarative configuration for application management.
+- Used declarative Kubernetes configurations for application management.
 
 ### 6. Monitoring and Logging
 
 Integrated observability components to monitor the Kubernetes environment and application workloads.
 
-- **Prometheus:** Metrics collection and monitoring.
-- **Grafana:** Visualization of monitoring metrics through dashboards.
-- **Loki:** Centralized log aggregation.
-- **Alloy:** Log collection and forwarding.
+- **Prometheus:** Collects and stores monitoring metrics.
+- **Grafana:** Visualizes metrics through monitoring dashboards.
+- **Loki:** Provides centralized log aggregation.
+- **Alloy:** Collects and forwards application and infrastructure logs.
 
-The observability stack helps inspect workload health, application behavior, and operational issues.
+This observability setup helps inspect workload health, application behavior, and operational issues.
 
 ---
 
@@ -165,16 +165,16 @@ flowchart TD
     C --> D[Detect Changed Services]
     D --> E{Source Changes Found?}
     E -->|No| F[Skip Build Stages]
-    E -->|Yes| G[SonarQube Analysis]
-    G --> H[Dependency Check]
-    H --> I[Trivy Scan]
-    I --> J[Build Docker Image]
-    J --> K[Image Vulnerability Scan]
-    K --> L[Push Image to Docker Hub]
-    L --> M[Update GitOps Image]
-    M --> N[Argo CD Sync]
-    N --> O[Deploy to EKS]
+    E -->|Yes| G[Trivy Security Scan]
+    G --> H[Build Docker Image]
+    H --> I[Push Image to Docker Hub]
+    I --> J[Update GitOps Image]
+    J --> K[Argo CD Image Updater]
+    K --> L[Argo CD Sync]
+    L --> M[Deploy to Amazon EKS]
 ```
+
+---
 
 ## Repository Structure
 
@@ -218,34 +218,29 @@ flowchart TD
 
 ## Engineering Highlights
 
-- Implemented a reusable Jenkins Shared Library architecture.
-- Automated microservice-specific build execution using source change detection.
-- Integrated code quality and vulnerability scanning into CI.
-- Separated CI and CD responsibilities using GitOps.
-- Automated image update handling with Argo CD Image Updater.
-- Used Terraform to manage cloud infrastructure as code.
-- Managed Kubernetes application deployments using Helm.
-- Integrated monitoring and centralized logging components.
+- Automated AWS infrastructure provisioning using Terraform.
+- Implemented reusable Jenkins Shared Library architecture.
+- Automated microservice-specific builds using source change detection.
+- Integrated container vulnerability scanning using Trivy.
+- Implemented GitOps-based continuous delivery with Argo CD.
+- Automated image update handling using Argo CD Image Updater.
+- Managed Kubernetes deployments using Helm.
+- Integrated monitoring and centralized logging using Prometheus, Grafana, Loki, and Alloy.
 
 ## Skills Demonstrated
 
-`DevOps` `CI/CD` `AWS` `Terraform` `Jenkins` `Docker` `Kubernetes` `Amazon EKS` `Argo CD` `GitOps` `Helm` `Prometheus` `Grafana` `Loki` `SonarQube` `Trivy` `Jenkins Shared Libraries`
+`AWS` `Terraform` `Jenkins` `Jenkins Shared Libraries` `Docker` `Kubernetes` `Amazon EKS` `Argo CD` `GitOps` `Helm` `Trivy` `Prometheus` `Grafana` `Loki` `Alloy` `CI/CD`
 
-## Application Source
-
-This project uses the Online Boutique microservices demonstration application as its application foundation.
-
-Original upstream repository:  
-https://github.com/GoogleCloudPlatform/microservices-demo
+---
 
 ## Author
 
 **Abhinav Raj**
 
-Full Stack Developer | DevOps Engineer (Fresher)
+DevOps Engineer
 
 GitHub: https://github.com/avinavvv
 
 ---
 
-*This repository is intended as a hands-on demonstration of infrastructure automation, CI/CD engineering, Kubernetes orchestration, GitOps, and observability practices.*
+*This project demonstrates practical implementation of AWS infrastructure automation, CI/CD engineering, Kubernetes orchestration, GitOps, and observability practices.*
